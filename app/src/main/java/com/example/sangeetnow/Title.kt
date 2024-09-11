@@ -58,9 +58,6 @@ fun Title(navController: NavHostController) {
     var isFirstTime by remember {
         mutableStateOf(false)
     }
-    var onLoadingComplete by remember{
-        mutableStateOf(false)
-    }
     mediaPlayer.value.setDataSource(mContext, Uri.parse(CurrentMusic.data.preview))
     mediaPlayer.value.prepareAsync()
         Card(modifier = Modifier
