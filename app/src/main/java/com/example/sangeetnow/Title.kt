@@ -98,13 +98,6 @@ fun Title(navController: NavHostController) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                             Button(onClick = {
                                 if (Build.checkNetwork(context = mContext)) {
-                                    /*if (mediaPlayer.value.duration == -1) {
-                                        mediaPlayer.value.setDataSource(
-                                            mContext,
-                                            Uri.parse(CurrentMusic.data.preview)
-                                        )
-                                        mediaPlayer.value.prepareAsync()
-                                    }*/
                                     if (isPlaying) {
                                         mediaPlayer.value.pause()
                                         isPlaying = false
