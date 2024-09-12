@@ -101,9 +101,8 @@ fun Title(navController: NavHostController) {
                                     } else {
                                         MediaPlayers.checkOn(mediaPlayer.value)
                                         if (isFirstTime) {
-                                            isPlaying = true
                                             mediaPlayer.value.setOnPreparedListener {
-
+                                                isPlaying = true
                                                 mediaPlayer.value.start()
                                                 isFirstTime = false
                                             }
