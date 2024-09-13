@@ -1,5 +1,6 @@
 package com.example.sangeetnow
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -90,7 +92,6 @@ fun SearchPage(navController: NavHostController) {
                     if(!Build.checkNetwork(context)){
                         context.createToastMessage("Turn on Wifi or Mobile data")
                     }
-                    MediaPlayers.pauseAndOff()
                     val data = Build.search(search)
                     data.enqueue(object : Callback<MainData?> {
                         override fun onResponse(p0: Call<MainData?>, p1: Response<MainData?>) {
@@ -111,4 +112,5 @@ fun SearchPage(navController: NavHostController) {
 
             }
         }
+
     }

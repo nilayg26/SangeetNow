@@ -105,8 +105,6 @@ suspend fun getResponse(context:Context,prompt:String):String{
         val generativeModel = GenerativeModel(modelName = "gemini-1.5-flash", apiKey = apiKey)
         val response =
             generativeModel.generateContent(prompt = "Give me a $prompt song, it should be available on Deezer music api,your response should consist of only one song name, Don't give name of movie, Just the song name")
-        println(prompt)
-        println(response.text.toString())
         response.text.toString()
     }
     catch (t:Throwable){

@@ -1,10 +1,8 @@
 package com.example.sangeetnow
 
 import android.media.MediaPlayer
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,9 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -30,12 +26,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -49,17 +43,19 @@ import kotlinx.coroutines.delay
 fun Title(navController: NavHostController) {
     val mContext= LocalContext.current
     val downloader=AndroidDownloader(mContext)
-    val mediaPlayer = remember {
-        mutableStateOf(MediaPlayer())
-    }
     var isPlaying by remember {
         mutableStateOf(false)
     }
     var isFirstTime by remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
-    mediaPlayer.value.setDataSource(mContext, Uri.parse(CurrentMusic.data.preview))
-    mediaPlayer.value.prepareAsync()
+    if (isFirstTime) {
+        TitlePlayer.value.release()
+        TitlePlayer.setSource(CurrentMusic.data.preview)
+        TitlePlayer.value.setOnPreparedListener {
+            isFirstTime = false
+        }
+    }
         Card(modifier = Modifier
             .padding(5.dp)
             .fillMaxSize()
@@ -95,29 +91,23 @@ fun Title(navController: NavHostController) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                             Button(onClick = {
                                 if (Build.checkNetwork(context = mContext)) {
+                                    if(!isFirstTime){
                                     if (isPlaying) {
-                                        mediaPlayer.value.pause()
+                                        TitlePlayer.value.pause()
                                         isPlaying = false
                                     } else {
-                                        MediaPlayers.checkOn(mediaPlayer.value)
-                                        if (isFirstTime) {
-                                            mediaPlayer.value.setOnPreparedListener {
-                                                isPlaying = true
-                                                mediaPlayer.value.start()
-                                                isFirstTime = false
-                                            }
-                                        } else {
-                                            mediaPlayer.value.start()
-                                            isPlaying = true
-                                        }
-                                        mediaPlayer.value.setOnCompletionListener {
-                                            isPlaying = false
-                                        }
+                                        TitlePlayer.value.start()
+                                        isPlaying = true
                                     }
+                                    TitlePlayer.value.setOnCompletionListener {
+                                        isPlaying = false
+
+                                    }
+                                }
                                 } else {
                                     mContext.createToastMessage("Mobile Data/Wifi Off")
                                     isPlaying = false
-                                    mediaPlayer.value.pause()
+                                    TitlePlayer.value.pause()
                                 }
                             }, colors = ButtonDefaults.buttonColors(LightModeColors.Yellow)) {
                                 Text(
@@ -134,17 +124,21 @@ fun Title(navController: NavHostController) {
                                 )
                             }
                         }
-                        MusicPlayerScreen(mediaPlayer = mediaPlayer.value,isPlaying)
+                        if (!isFirstTime) {
+                            MusicPlayerScreen(mediaPlayer = TitlePlayer.value,isPlaying)
+                        }
+                        else{
+                            LoadingScreen()
+                        }
                     }
                     }
             }
         }
     DisposableEffect(Unit) {
         onDispose {
-            if (mediaPlayer.value.isPlaying) {
-                mediaPlayer.value.stop()  // Stop playback
-                mediaPlayer.value.release()
-            }
+            TitlePlayer.value.release()
+            TitlePlayer.first=true
+            MyPlayer.first=true
         }
     }
 
@@ -154,33 +148,38 @@ fun Title(navController: NavHostController) {
 fun MusicPlayerScreen(mediaPlayer: MediaPlayer, isPlaying: Boolean) {
     var songProgress by remember { mutableFloatStateOf(0f) }
     var isSeeking by remember { mutableStateOf(false) }
-        Row(modifier = Modifier
-            .padding(5.dp), verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center) {
-            Slider(
-                value = songProgress,
-                onValueChange = { newValue ->
-                    isSeeking = true
-                    songProgress = newValue
-                },
-                onValueChangeFinished = {
-                    isSeeking = false
-                    mediaPlayer.seekTo((songProgress * mediaPlayer.duration).toInt())  // Seek to the new position
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.7F)
-                    .padding(5.dp)
-            )
-            Text(text = "${((songProgress * mediaPlayer.duration).toLong() / 1000)}s")
-        }
-        LaunchedEffect(isPlaying) {
-               println("LaunchedEffectCalled")
-                while (isPlaying) {
-                    if (!isSeeking) {
-                        songProgress = mediaPlayer.currentPosition.toFloat()/mediaPlayer.duration
-                    }
-                    delay(1000)
-                }
 
+    Row(
+        modifier = Modifier
+            .padding(5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Slider(
+            valueRange = 0f..100f,
+            value = songProgress,  // Directly use songProgress
+            onValueChange = { newValue ->
+                isSeeking = true
+                songProgress = newValue
+            },
+            onValueChangeFinished = {
+                isSeeking = false
+                mediaPlayer.seekTo((songProgress / 100 * mediaPlayer.duration).toInt())  // Seek to the new position
+            },
+            modifier = Modifier
+                .fillMaxWidth(0.7F)
+                .padding(5.dp)
+        )
+            Text(text = "${((songProgress / 100 * mediaPlayer.duration) / 1000).toLong()}s")
+    }
+
+    // Launch effect to update song progress while playing
+    LaunchedEffect(mediaPlayer.isPlaying) {
+        while (mediaPlayer.isPlaying) {
+            if (!isSeeking) {
+                songProgress = (mediaPlayer.currentPosition.toFloat() / mediaPlayer.duration) * 100  // Normalize progress
+            }
+            delay(1000)
         }
     }
+}

@@ -1,6 +1,5 @@
 package com.example.sangeetnow
 import android.media.MediaPlayer
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,59 +57,6 @@ fun AppButton(str: String,onClick:()->Unit){
 
     }
 }
-@Composable
-fun DisplaySongs(mainData: MainData, navController: NavHostController) {
-    val state= rememberScrollState()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(state)
-    ) {
-        if (mainData.data != null) {
-            mainData.data.forEachIndexed {i,it->
-                if(i<10) {
-                    MusicCard(title = it.title, picUrl = it.album.cover_small, song = it.preview,navController,it)
-                }
-            }
-        }
-
-    }
-}
-@Composable
-fun MusicCard(title:String,picUrl:String,song:String,navController: NavHostController,data: Data){
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-            .clickable {
-                MediaPlayers.pauseAndOff()
-                CurrentMusic.data = data
-                navController.navigate(Title.route)
-            },
-        elevation = CardDefaults.elevatedCardElevation(15.dp),
-        colors = CardDefaults.cardColors(containerColor = LightModeColors.Orange),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Text(text = helperFunction(title), Modifier.padding(10.dp), fontWeight = FontWeight.Bold,color = LightModeColors.Blue)
-            Spacer(modifier = Modifier.weight(0.2F))
-            Player(url =song)
-            Image(
-                painter = rememberAsyncImagePainter(model = picUrl),
-                contentDescription = "album photo",
-                modifier = Modifier
-                    .padding(10.dp)
-                    .size(50.dp)
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(10.dp))
-            )
-        }
-
-    }
-}
 fun helperFunction(str:String,extra:String="",i:Int=13):String{
     val full=str+extra
     if(full.length>i){
@@ -134,80 +80,156 @@ fun LoadingScreen() {
     }
 
 }
-object MediaPlayers{
-   val list= mutableMapOf<MediaPlayer,(Boolean)->Unit>()
-    fun checkOn(mediaPlayer: MediaPlayer) {
-        list.forEach { (player, setIsPlaying) ->
-            if (mediaPlayer != player && player.duration != -1 && player.isPlaying) {
-                player.pause()
-                setIsPlaying(false)
-            }
-        }
+object TitlePlayer{
+    var value:MediaPlayer=MediaPlayer()
+    var first=true
+    fun setSource(url: String){
+       value.release()
+        value = MediaPlayer()
+        value.setDataSource(url)
+       value.prepareAsync()
     }
-    fun pauseAndOff(){
-        if(list.isNotEmpty()) {
-            list.forEach { (player, off) ->
-                player.pause()
-                off(false)
+}
+object MyPlayer{
+    var value:MediaPlayer=MediaPlayer()
+    var first=true
+    private var map= mutableMapOf<Int,()->(Unit)>()
+    fun setSource(url: String){
+        value.release()
+        value= MediaPlayer()
+        value.setDataSource(url)
+        value.prepareAsync()
+    }
+    fun addToMap(i:Int,s:()->(Unit)){
+        map.put(i,s)
+    }
+    fun pauseAll(i:Int){
+        map.forEach{ (it, func) ->
+            if(it!=i){
+                func()
             }
         }
     }
 }
 @Composable
-fun Player(title: String="",url:String="") {
+fun DisplaySongs(mainData: MainData, navController: NavHostController) {
+    val state= rememberScrollState()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(state)
+    ) {
+        if (mainData.data != null) {
+            mainData.data.forEachIndexed {i,it->
+                if(i<10) {
+                    MusicCard(title = it.title, picUrl = it.album.cover_small, song = it.preview,navController,it,i)
+                }
+            }
+        }
+
+    }
+}
+@Composable
+fun MusicCard(
+    title: String,
+    picUrl: String,
+    song: String,
+    navController: NavHostController,
+    data: Data,
+    i: Int
+){
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+            .clickable {
+                MyPlayer.value.release()
+                CurrentMusic.data = data
+                navController.navigate(Title.route)
+            },
+        elevation = CardDefaults.elevatedCardElevation(15.dp),
+        colors = CardDefaults.cardColors(containerColor = LightModeColors.Orange),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Text(text = helperFunction(title), Modifier.padding(10.dp), fontWeight = FontWeight.Bold,color = LightModeColors.Blue)
+            Spacer(modifier = Modifier.weight(0.2F))
+            Player(url =song, i = i)
+            Image(
+                painter = rememberAsyncImagePainter(model = picUrl),
+                contentDescription = "album photo",
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(50.dp)
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(10.dp))
+            )
+        }
+
+    }
+}
+@Composable
+fun Player(title: String="",url:String="",i: Int) {
     val mContext = LocalContext.current
     val firstTime= remember { mutableStateOf(true) }
-    val mediaPlayer = remember {
-        mutableStateOf(MediaPlayer())
-    }
     var isPlaying by remember{ mutableStateOf(false) }
-    MediaPlayers.list[mediaPlayer.value] = { playing -> isPlaying = playing }
-    if(mediaPlayer.value.duration!=-1) {
-        isPlaying = mediaPlayer.value.isPlaying
+    MyPlayer.addToMap(i){
+        isPlaying = false
     }
     Row {
         Button(colors = ButtonDefaults.buttonColors(LightModeColors.Yellow),onClick = {
             if (Build.checkNetwork(context = mContext)){
-            if(mediaPlayer.value.duration==-1) {
-                mediaPlayer.value.setDataSource(mContext, Uri.parse(url))
-                mediaPlayer.value.prepareAsync()
-            }
                 if(isPlaying){
-                        mediaPlayer.value.pause()
-                        isPlaying=false
+                    MyPlayer.value.pause()
+                    isPlaying=false
                 }
                 else{
-                    MediaPlayers.checkOn(mediaPlayer.value)
-                    if(firstTime.value){
-                        isPlaying = true
-                    mediaPlayer.value.setOnPreparedListener {
-                        mediaPlayer.value.start()
-                        firstTime.value=false
+
+                    if(!MyPlayer.first){
+                        MyPlayer.pauseAll(i)
+                        MyPlayer.setSource(url)
+                        MyPlayer.value.setOnPreparedListener {
+                            MyPlayer.value.start()
+                            firstTime.value=false
+                            isPlaying = true
+                            MyPlayer.first=false
+                        }
                     }
+                    if(firstTime.value){
+                        MyPlayer.pauseAll(i)
+                        MyPlayer.setSource(url)
+                        MyPlayer.value.setOnPreparedListener {
+                            MyPlayer.value.start()
+                            firstTime.value=false
+                            isPlaying = true
+                            MyPlayer.first=false
+                        }
                     }
                     else{
-                        mediaPlayer.value.start()
+                        MyPlayer.pauseAll(i)
+                        MyPlayer.value.start()
                         isPlaying = true
                     }
-                    mediaPlayer.value.setOnCompletionListener {
+                    MyPlayer.value.setOnCompletionListener {
                         isPlaying=false
                     }
                 }
-        }
-        else{
-            mContext.createToastMessage("Mobile Data/Wifi Off")
+            }
+            else{
+                mContext.createToastMessage("Mobile Data/Wifi Off")
                 isPlaying=false
-                mediaPlayer.value.pause()
-        }}) {
+                MyPlayer.value.pause()
+            }}) {
             Text(text = if (isPlaying) "⏸️" else "▶️", color = LightModeColors.Blue)
         }
     }
+
     DisposableEffect(Unit){
         onDispose {
-            if(isPlaying){
-                mediaPlayer.value.stop()
-                mediaPlayer.value.release()
-            }
+                MyPlayer.value.release()
         }
     }
 }
