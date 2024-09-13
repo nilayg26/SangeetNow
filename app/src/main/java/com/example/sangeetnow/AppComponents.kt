@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.sangeetnow.ui.theme.LightModeColors
+import kotlinx.coroutines.delay
 
 @Composable
 fun AppButton(str: String,onClick:()->Unit){
@@ -75,7 +76,7 @@ fun LoadingScreen() {
     ) {
         CircularProgressIndicator(
             strokeWidth = 5.dp,
-            modifier = Modifier.size(35.dp)
+            modifier = Modifier.size(25.dp)
         )
     }
 
@@ -176,10 +177,14 @@ fun Player(title: String="",url:String="",i: Int) {
     val mContext = LocalContext.current
     val firstTime= remember { mutableStateOf(true) }
     var isPlaying by remember{ mutableStateOf(false) }
+    var click by remember{ mutableStateOf(false) }
     MyPlayer.addToMap(i){
         isPlaying = false
     }
     Row {
+        if(firstTime.value&&click){
+            LoadingScreen()
+        }else{
         Button(colors = ButtonDefaults.buttonColors(LightModeColors.Yellow),onClick = {
             if (Build.checkNetwork(context = mContext)){
                 if(isPlaying){
@@ -187,7 +192,6 @@ fun Player(title: String="",url:String="",i: Int) {
                     isPlaying=false
                 }
                 else{
-
                     if(!MyPlayer.first){
                         MyPlayer.pauseAll(i)
                         MyPlayer.setSource(url)
@@ -199,6 +203,7 @@ fun Player(title: String="",url:String="",i: Int) {
                         }
                     }
                     if(firstTime.value){
+                        click=true
                         MyPlayer.pauseAll(i)
                         MyPlayer.setSource(url)
                         MyPlayer.value.setOnPreparedListener {
@@ -224,6 +229,7 @@ fun Player(title: String="",url:String="",i: Int) {
                 MyPlayer.value.pause()
             }}) {
             Text(text = if (isPlaying) "⏸️" else "▶️", color = LightModeColors.Blue)
+        }
         }
     }
 
