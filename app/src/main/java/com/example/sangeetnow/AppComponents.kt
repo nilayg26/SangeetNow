@@ -179,7 +179,8 @@ fun Player(title: String="",url:String="",i: Int) {
     var isPlaying by remember{ mutableStateOf(false) }
     var click by remember{ mutableStateOf(false) }
     MyPlayer.addToMap(i){
-        isPlaying = false
+        isPlaying = false;
+        click=false
     }
     Row {
         if(firstTime.value&&click){
