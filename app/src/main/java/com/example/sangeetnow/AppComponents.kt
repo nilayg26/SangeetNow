@@ -104,7 +104,7 @@ object MyPlayer{
     fun addToMap(i:Int,s:()->(Unit)){
         map.put(i,s)
     }
-    fun pauseAll(i:Int){
+    fun pauseAll(i:Int=100){
         map.forEach{ (it, func) ->
             if(it!=i){
                 func()

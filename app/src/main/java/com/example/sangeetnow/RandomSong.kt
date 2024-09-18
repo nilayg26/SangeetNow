@@ -51,15 +51,15 @@ fun RandomSong(navController: NavHostController, param: () -> Unit) {
         Modifier
             .padding(10.dp)
             .fillMaxWidth(),Arrangement.SpaceEvenly,Alignment.CenterVertically) {
-        if (clicked) {
-            LoadingScreen()
-        }
        TextField(value =text , onValueChange ={it->text=it},Modifier.fillMaxWidth(0.65f), label = { Text(
            text = "Your Mood? Your tone...😌", fontSize = 10.sp
        )})
-        Button(onClick = { clicked=true;println("Button called") }) {
+        Button(onClick = { clicked=true}) {
             Text(text = if(clicked)"☑️" else "✅")
         }
+    }
+    if (clicked) {
+        LoadingScreen()
     }
     LaunchedEffect(clicked){
         if(clicked) {
@@ -87,9 +87,6 @@ fun RandomSong(navController: NavHostController, param: () -> Unit) {
             CurrentMusic.data = songList[0]
             navController.navigate(Title.route)
         }
-        else if(response == "safety"){
-            context.createToastMessage("Sorry could not load")
-        }
         else{
             context.createToastMessage("Song cannot be found")
         }
@@ -108,7 +105,7 @@ suspend fun getResponse(context:Context,prompt:String):String{
         response.text.toString()
     }
     catch (t:Throwable){
-        println("Safety was found")
+        println(t.message)
         "safety"
     }
 }
