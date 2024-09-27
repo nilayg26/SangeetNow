@@ -1,5 +1,6 @@
 package com.example.sangeetnow
 import android.media.MediaPlayer
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -113,20 +114,28 @@ object MyPlayer{
     }
 }
 @Composable
-fun DisplaySongs(mainData: MainData, navController: NavHostController) {
+fun DisplaySongs(mainData: MainData?, navController: NavHostController) {
     val state= rememberScrollState()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(state)
-    ) {
-        if (mainData.data != null) {
-            mainData.data.forEachIndexed {i,it->
-                if(i<10) {
-                    MusicCard(title = it.title, picUrl = it.album.cover_small, song = it.preview,navController,it,i)
+        if(mainData?.data!=null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(state)
+            ) {
+                mainData.data.forEachIndexed { i, it ->
+                    if (i < 10) {
+                        MusicCard(
+                            title = it.title,
+                            picUrl = it.album.cover_small?:"https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-pic-design-profile-vector-png-image_40966566.jpg",
+                            song = it.preview,
+                            navController,
+                            it,
+                            i
+                        )
+                    }
                 }
+
             }
-        }
 
     }
 }

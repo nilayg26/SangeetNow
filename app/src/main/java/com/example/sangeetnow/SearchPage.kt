@@ -104,11 +104,12 @@ fun SearchPage(navController: NavHostController) {
                     }
                     )
                 }
-
-                DisplaySongs(
-                    mainData = dataChanged.value,
-                    navController
-                )
+                if(dataChanged.value!=null) {
+                    DisplaySongs(
+                        mainData = dataChanged.value,
+                        navController
+                    )
+                }
 
             }
         }
