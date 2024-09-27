@@ -1,4 +1,5 @@
 package com.example.sangeetnow
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -110,6 +111,7 @@ object MyPlayer{
         }
     }
 }
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun DisplaySongs(mainData: MainData?, navController: NavHostController) {
     val state= rememberScrollState()
