@@ -5,7 +5,4 @@ Plus, with our AI feature, just prompt the app with phrases like 'happy song,' '
 [Click to Download Latest Version of SangeetNow](https://github.com/nilayg26/SangeetNow/releases/download/v1.1.0/SangeetNow-v110.apk)
 
 
-## Technologies Used
-    Kotlin, JetpackCompose, Retrofit, GeminiAPI, Firebase etc.
-
 
