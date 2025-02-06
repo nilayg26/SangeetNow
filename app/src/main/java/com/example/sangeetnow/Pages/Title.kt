@@ -1,6 +1,7 @@
-package com.example.sangeetnow
+package com.example.sangeetnow.Pages
 
 import android.media.MediaPlayer
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,13 +37,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.sangeetnow.Build
+import com.example.sangeetnow.CurrentMusic
+import com.example.sangeetnow.Download.AndroidDownloader
+import com.example.sangeetnow.LoadingScreen
+import com.example.sangeetnow.MyPlayer
+import com.example.sangeetnow.TitlePlayer
+import com.example.sangeetnow.createToastMessage
+import com.example.sangeetnow.helperFunction
 import com.example.sangeetnow.ui.theme.LightModeColors
 import kotlinx.coroutines.delay
 
 @Composable
 fun Title(navController: NavHostController) {
     val mContext= LocalContext.current
-    val downloader=AndroidDownloader(mContext)
+    val downloader= AndroidDownloader(mContext)
     var isPlaying by remember {
         mutableStateOf(false)
     }
@@ -78,17 +87,17 @@ fun Title(navController: NavHostController) {
                         verticalArrangement = Arrangement.SpaceEvenly,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                            Text(text = "🎶 "+helperFunction(CurrentMusic.data.title,i=CurrentMusic.data.title.length) ,
+                            Text(text = "🎶 "+ helperFunction(CurrentMusic.data.title,i= CurrentMusic.data.title.length) ,
                                 Modifier.padding(20.dp),
                                 fontWeight = FontWeight.Bold,
                                 color = LightModeColors.Blue,
                                 fontSize = 25.sp)
-                            Text(text ="👨🏻‍🎤 "+helperFunction(CurrentMusic.data.artist.name,i=30) ,
+                            Text(text ="👨🏻‍🎤 "+ helperFunction(CurrentMusic.data.artist.name,i=30) ,
                                 Modifier.padding(10.dp),
                                 fontWeight = FontWeight.Bold,
                                 color = LightModeColors.Blue,
                                 fontSize = 20.sp)
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                        Row(Modifier.fillMaxWidth().animateContentSize(), horizontalArrangement = Arrangement.SpaceEvenly) {
                             Button(onClick = {
                                 if (Build.checkNetwork(context = mContext)) {
                                     if(!isFirstTime){
@@ -137,8 +146,8 @@ fun Title(navController: NavHostController) {
     DisposableEffect(Unit) {
         onDispose {
             TitlePlayer.value.release()
-            TitlePlayer.first=true
-            MyPlayer.first=true
+            TitlePlayer.first =true
+            MyPlayer.first =true
         }
     }
 

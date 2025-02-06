@@ -18,6 +18,7 @@ object LightModeColors{
     val Orange= Color(0xFFFFFFDD)
  //   val Pink = Color(0xFFF7E2E8)
     val Yellow=Color(0xFFF7D799)
+    val Orange2=Color(0xFFFF9800)
 }
 object DarkModeColors{
     val Blue = Color(0xFF9AB3BE)

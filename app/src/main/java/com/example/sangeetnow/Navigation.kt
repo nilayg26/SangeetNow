@@ -11,3 +11,9 @@ object Search:Destinations{
 object Title:Destinations{
     override val route: String="Title"
 }
+object AccountPage:Destinations{
+    override val route: String="AccountPage"
+}
+object LoginPage:Destinations{
+    override val route: String="LoginPage"
+}
