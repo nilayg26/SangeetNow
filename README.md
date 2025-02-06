@@ -6,11 +6,6 @@ Plus, with our AI feature, just prompt the app with phrases like 'happy song,' '
 
 
 ## Technologies Used
-    Code: Kotlin
-    UI: JetPack Compose
-    Networking: Retrofit
-    API: Deezer API (for Music) 
-         Google's Gemini API (for AI) 
-    IDE: Android Studio
+    Kotlin, JetpackCompose, Retrofit, GeminiAPI, Firebase etc.
 
 
