@@ -1,5 +1,6 @@
 package com.example.sangeetnow
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,12 +16,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -31,11 +42,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
+import com.example.sangeetnow.DataClasses.Data
+import com.example.sangeetnow.DataClasses.MainData
 import com.example.sangeetnow.ui.theme.LightModeColors
 @Composable
 fun AppButton(str: String,onClick:()->Unit){
@@ -65,20 +89,7 @@ fun helperFunction(str:String,extra:String="",i:Int=13):String{
     return str
 }
 object CurrentMusic{
-    lateinit var data:Data
-}
-@Composable
-fun LoadingScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(0.2F),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            strokeWidth = 5.dp,
-            modifier = Modifier.size(25.dp)
-        )
-    }
-
+    lateinit var data: Data
 }
 object TitlePlayer{
     var value:MediaPlayer=MediaPlayer()
@@ -247,4 +258,67 @@ fun Player(title: String="",url:String="",i: Int) {
                 MyPlayer.value.release()
         }
     }
+}
+
+@Composable
+fun TextCardSN(text:String, size: Int=28,color: Color=LightModeColors.Orange2){
+    Card(colors = CardDefaults.cardColors(containerColor = color, contentColor = Color.White), modifier = Modifier.fillMaxWidth(), shape = RectangleShape) {
+        Text(
+            text = text,
+            fontSize = size.sp,
+            modifier = Modifier
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(40.dp)
+        )
+    }
+}
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun IconButtonSN(sharedPreferences: SharedPreferences,size: Int =40, onClick:()->(Unit)={} ) {
+    IconButton(modifier = Modifier.padding(end = 10.dp).size(size.dp),onClick = onClick, colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)) {
+        val picUrl=sharedPreferences.getString("picUrl","")
+        GlideImage(model =picUrl, contentDescription ="profile pic" ,
+            failure = placeholder(R.drawable.img),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+@Composable
+fun TextFieldSN(text: String, password:Boolean=true, label: String="", lamda: (String) -> String){
+    var passwordVisible by remember {
+        mutableStateOf(true)
+    }
+    OutlinedTextField(value = text, onValueChange ={newVal->lamda(newVal)}, label = { Text(
+        text = label, fontSize = 15.sp,
+    )
+    }, textStyle = TextStyle(fontSize = 13.sp),
+        shape = RoundedCornerShape(20.dp), modifier = Modifier.padding(top = 10.dp),
+        colors = OutlinedTextFieldDefaults.colors(Color.Black, Color.Black),
+        visualTransformation =
+        if (passwordVisible && password) PasswordVisualTransformation() else VisualTransformation.None ,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        trailingIcon = {
+            val image = if(!password){
+                Icons.Filled.AccountBox}else if (passwordVisible)
+                Icons.Filled.Favorite
+            else Icons.Filled.FavoriteBorder
+            val description = if (passwordVisible) "Hide password" else "Show password"
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Icon(imageVector = image, contentDescription = description)
+            }
+        }
+    )
+}
+@Composable
+fun LoadingScreen(size: Int=25) {
+    Box(
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            strokeWidth = 5.dp,
+            modifier = Modifier.size(size.dp),
+            color = LightModeColors.Blue
+        )
+    }
+
 }

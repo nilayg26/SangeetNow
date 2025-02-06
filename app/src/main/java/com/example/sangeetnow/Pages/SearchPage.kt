@@ -1,18 +1,21 @@
-package com.example.sangeetnow
+package com.example.sangeetnow.Pages
 
-import android.media.MediaPlayer
+import android.content.SharedPreferences
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -23,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -30,13 +34,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.example.sangeetnow.AccountPage
+import com.example.sangeetnow.AppButton
+import com.example.sangeetnow.Build
+import com.example.sangeetnow.DataClasses.MainData
+import com.example.sangeetnow.DisplaySongs
+import com.example.sangeetnow.IconButtonSN
+import com.example.sangeetnow.createToastMessage
 import com.example.sangeetnow.ui.theme.LightModeColors
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun SearchPage(navController: NavHostController) {
+fun SearchPage(navController: NavHostController, sharedPreferences: SharedPreferences) {
     val context= LocalContext.current
     var isClicked by rememberSaveable() {
         mutableStateOf(false)
@@ -51,19 +62,26 @@ fun SearchPage(navController: NavHostController) {
                 .clip(RoundedCornerShape(20.dp))
                 .background(LightModeColors.YellowD)
         ) {
+            Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Search 🔎",
+                    Modifier.padding(10.dp),
+                    fontWeight = FontWeight.Bold,
+                    color = LightModeColors.Blue,
+                    fontSize = 40.sp
+                )
+                    IconButtonSN(sharedPreferences) {
+                        navController.navigate(AccountPage.route)
+                    }
 
-            Text(
-                text = "Search 🔎",
-                Modifier.padding(10.dp),
-                fontWeight = FontWeight.Bold,
-                color = LightModeColors.Blue,
-                fontSize = 40.sp
-            )
+            }
+
             OutlinedTextField(
                 value = search, onValueChange = { search = it;isClicked=false }, modifier = Modifier
                     .padding(20.dp)
                     .fillMaxWidth(),
-                label = { Text(text = "Type to Search 🎵 🎶 👨🏻‍🎤 ...") }
+                label = { Text(text = "Type to Search 🎵 🎶 👨🏻‍🎤 ...", color = Color.Black) },
+                colors = OutlinedTextFieldDefaults.colors(Color.Black)
             )
             if (search == "") {
                 Spacer(modifier = Modifier.weight(1F))
@@ -75,7 +93,7 @@ fun SearchPage(navController: NavHostController) {
                     AppButton(str = "Click for AI 👽🎧") {
                         isClicked=true
                     }
-                    if(isClicked){
+                    AnimatedVisibility(isClicked){
                         if(Build.checkNetwork(context)) {
                             RandomSong(navController = navController) { isClicked = false }
                         }

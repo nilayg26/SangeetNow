@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "499859529508",
+    "project_id": "sangeetnow-2eaf1",
+    "storage_bucket": "sangeetnow-2eaf1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499859529508:android:0811bb97073dab8d081db1",
+        "android_client_info": {
+          "package_name": "com.example.sangeetnow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499859529508-mn3irg30vdao22cruf0qn9u86uhhes7v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sangeetnow",
+            "certificate_hash": "a785a1edddf1aae544e6d09c778468c6787be3ff"
+          }
+        },
+        {
+          "client_id": "499859529508-rtrlsh7im9tbfvhv0f5fcrajbolvmblc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_Znb_862DLx1H1YkUDnxFs_vAtWWwldY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499859529508-rtrlsh7im9tbfvhv0f5fcrajbolvmblc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
