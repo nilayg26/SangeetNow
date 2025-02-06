@@ -1,9 +1,10 @@
-package com.example.sangeetnow
+package com.example.sangeetnow.Download
 
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.example.sangeetnow.createToastMessage
 
 class DownloadCompletedReceiver:BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

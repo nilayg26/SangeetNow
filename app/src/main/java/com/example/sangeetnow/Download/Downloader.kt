@@ -1,6 +1,4 @@
-package com.example.sangeetnow
-
-import java.net.URL
+package com.example.sangeetnow.Download
 
 interface Downloader{
     fun downloadFile(url: String):Long
