@@ -5,6 +5,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -53,15 +54,16 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.7")
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
-    implementation ("androidx.compose.animation:animation:1.7.1")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation ("androidx.compose.animation:animation:1.7.7")
+    implementation("androidx.navigation:navigation-compose:2.8.6")
     implementation ("com.google.android.exoplayer:exoplayer:2.19.1")
     implementation ("com.google.android.exoplayer:exoplayer-core:2.19.1")
     implementation ("com.google.android.exoplayer:exoplayer-ui:2.19.1")
-    implementation ("com.github.bumptech.glide:compose:1.0.0-alpha.1")
+    implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation ("io.coil-kt:coil-compose:2.4.0")
-
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation ("androidx.compose.runtime:runtime-livedata")
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
@@ -73,6 +75,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("com.google.firebase:firebase-auth:23.1.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")

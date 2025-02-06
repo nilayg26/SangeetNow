@@ -1,4 +1,4 @@
-package com.example.sangeetnow
+package com.example.sangeetnow.DataClasses
 
 data class MainData(
     val `data`: List<Data>,
