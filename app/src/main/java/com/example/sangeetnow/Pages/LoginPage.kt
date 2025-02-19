@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -41,6 +43,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.sangeetnow.AnimationLottie
 import com.example.sangeetnow.LoadingScreen
 import com.example.sangeetnow.LoginPage
 import com.example.sangeetnow.R
@@ -90,26 +98,28 @@ fun LogIn(
                 }
             }
         }
+    val verticalScroll= rememberScrollState()
         Column(
             modifier = Modifier
                 .padding(5.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(20.dp))
                 .background(LightModeColors.YellowD)
-                .paint(painterResource(R.drawable.background),contentScale = ContentScale.Crop)
+                .verticalScroll(verticalScroll)
                 ,
             horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
             Spacer(modifier = Modifier.height(60.dp))
-            TextCardSN("Lets Get you in!", color = LightModeColors.YellowD)
+            TextCardSN("Lets Get you in!", color = LightModeColors.Orange2)
             Spacer(modifier = Modifier.height(80.dp))
-            Text(text = "Welcome to SangeetNow", fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold, color = LightModeColors.Blue, modifier = Modifier.graphicsLayer {
-                scaleY=scale
-                scaleX=scale
-                transformOrigin= TransformOrigin.Center
-            }, fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(120.dp))
+            AnimationLottie()
+//            Text(text = "Welcome to SangeetNow", fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold, color = LightModeColors.Blue, modifier = Modifier.graphicsLayer {
+//                scaleY=scale
+//                scaleX=scale
+//                transformOrigin= TransformOrigin.Center
+//            }, fontSize = 20.sp)
+            Spacer(modifier = Modifier.height(80.dp))
             Button(
                 modifier = Modifier.animateContentSize(),
                 onClick = {
@@ -118,7 +128,7 @@ fun LogIn(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = LightModeColors.YellowD,
+                    containerColor = LightModeColors.Orange2,
                     contentColor = Color.White
                 )
             ) {

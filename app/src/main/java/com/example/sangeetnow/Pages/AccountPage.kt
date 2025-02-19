@@ -82,10 +82,10 @@ fun AccountPage(
         GlideImage(model = picUrl, failure = placeholder(R.drawable.appicon)
             , contentDescription = "", modifier = Modifier.clip(RoundedCornerShape(20.dp)).size(100.dp))
         Spacer(modifier = Modifier.height(20.dp))
-        TextFieldSN(password = false,
+        TextFieldSN(enable = false,password = false,
             text = name.toString(), lamda = {it}, label = "Name"
         )
-        TextFieldSN(password = false,
+        TextFieldSN(enable = false,password = false,
             text = email.toString(), lamda = {it}, label = "Email"
         )
         Spacer(modifier = Modifier.height(60.dp))

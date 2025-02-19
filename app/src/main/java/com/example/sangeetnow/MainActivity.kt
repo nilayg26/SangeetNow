@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,22 +32,41 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sharedPreferences=this.getSharedPreferences("SangeetNow", Context.MODE_PRIVATE)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(scrim = LightModeColors.YellowD.toArgb(),
+                darkScrim = LightModeColors.YellowD.toArgb()
+            ),
+            navigationBarStyle = SystemBarStyle.light(scrim = LightModeColors.YellowD.toArgb(),
+                darkScrim = LightModeColors.YellowD.toArgb()
+            )
+        )
+        val sharedPreferences=this.getSharedPreferences("SangeetNow", MODE_PRIVATE)
         val authViewModel:AuthViewModel by viewModels()
         setContent {
             Build.createBuilder("https://deezerdevs-deezer.p.rapidapi.com/")
             SangeetNowTheme {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .background(LightModeColors.Orange),
-                ) {
-                    Navigation(sharedPreferences,authViewModel)
+                Scaffold {innerPadding->
+                    Column(
+                        Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize()
+                            .background(LightModeColors.YellowD),
+                    ) {
+                        Navigation(sharedPreferences,authViewModel)
+                    }
                 }
             }
         }
