@@ -55,6 +55,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
@@ -284,16 +289,16 @@ fun IconButtonSN(sharedPreferences: SharedPreferences,size: Int =40, onClick:()-
     }
 }
 @Composable
-fun TextFieldSN(text: String, password:Boolean=true, label: String="", lamda: (String) -> String){
+fun TextFieldSN(text: String, enable:Boolean=true,password:Boolean=true, label: String="", lamda: (String) -> String){
     var passwordVisible by remember {
         mutableStateOf(true)
     }
-    OutlinedTextField(value = text, onValueChange ={newVal->lamda(newVal)}, label = { Text(
+    OutlinedTextField(enabled = enable,value = text, onValueChange ={newVal->lamda(newVal)}, label = { Text(
         text = label, fontSize = 15.sp,
     )
     }, textStyle = TextStyle(fontSize = 13.sp),
         shape = RoundedCornerShape(20.dp), modifier = Modifier.padding(top = 10.dp),
-        colors = OutlinedTextFieldDefaults.colors(Color.Black, Color.Black),
+        colors = OutlinedTextFieldDefaults.colors(Color.Black, Color.Black, disabledTextColor = Color.Black, disabledLabelColor = LightModeColors.Blue, disabledBorderColor = LightModeColors.Blue),
         visualTransformation =
         if (passwordVisible && password) PasswordVisualTransformation() else VisualTransformation.None ,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -321,4 +326,22 @@ fun LoadingScreen(size: Int=25) {
         )
     }
 
+}
+@Composable
+fun AnimationLottie(id:Int=R.raw.meditation,size:Int=200){
+    val preloaderLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(
+            id
+        )
+    )
+    val preloaderProgress by animateLottieCompositionAsState(
+        preloaderLottieComposition,
+        isPlaying = true,
+        iterations = LottieConstants.IterateForever
+    )
+    LottieAnimation(
+        composition =preloaderLottieComposition,
+        progress = preloaderProgress,
+        modifier = Modifier.size(size.dp)
+    )
 }

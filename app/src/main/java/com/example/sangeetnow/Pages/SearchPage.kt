@@ -3,6 +3,7 @@ package com.example.sangeetnow.Pages
 import android.content.SharedPreferences
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,8 +11,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -35,11 +39,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.sangeetnow.AccountPage
+import com.example.sangeetnow.AnimationLottie
 import com.example.sangeetnow.AppButton
 import com.example.sangeetnow.Build
 import com.example.sangeetnow.DataClasses.MainData
 import com.example.sangeetnow.DisplaySongs
 import com.example.sangeetnow.IconButtonSN
+import com.example.sangeetnow.R
 import com.example.sangeetnow.createToastMessage
 import com.example.sangeetnow.ui.theme.LightModeColors
 import retrofit2.Call
@@ -52,6 +58,7 @@ fun SearchPage(navController: NavHostController, sharedPreferences: SharedPrefer
     var isClicked by rememberSaveable() {
         mutableStateOf(false)
     }
+    val scrollState= rememberScrollState()
         val mainData = remember { MutableLiveData(MainData(emptyList(), "", 0)) }
         val dataChanged = mainData.observeAsState(initial = MainData(emptyList(), "", 0))
         var search by rememberSaveable { mutableStateOf("") }
@@ -86,9 +93,9 @@ fun SearchPage(navController: NavHostController, sharedPreferences: SharedPrefer
             if (search == "") {
                 Spacer(modifier = Modifier.weight(1F))
                 Column(
-                    Modifier.fillMaxSize(),
+                    Modifier.fillMaxSize().animateContentSize().verticalScroll(scrollState),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     AppButton(str = "Click for AI 👽🎧") {
                         isClicked=true
@@ -102,7 +109,8 @@ fun SearchPage(navController: NavHostController, sharedPreferences: SharedPrefer
                             isClicked=false
                         }
                     }
-                    Spacer(modifier = Modifier.weight(0.75f))
+                    Spacer(modifier = Modifier.height(100.dp))
+                    AnimationLottie(R.raw.speaker, size = 250)
                     Text(text = "App By Nilay", fontStyle = FontStyle.Italic, fontSize = 12.sp, color = LightModeColors.Blue, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 7.dp))
                 }
             } else {
