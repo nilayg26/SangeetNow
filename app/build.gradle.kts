@@ -1,13 +1,10 @@
 import java.util.Properties
-
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
     id("com.google.gms.google-services")
 }
-
 android {
     namespace = "com.example.sangeetnow"
     compileSdk = 35
@@ -17,7 +14,7 @@ android {
         minSdk = 29
         targetSdk = 35
         versionCode = 1
-        versionName =  "1.1.1"
+        versionName =  "1.1.2"
         android.buildFeatures.buildConfig=true
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
@@ -54,15 +51,14 @@ android {
 }
 
 dependencies {
-
+    implementation ("io.ktor:ktor-client-android:2.1.3")
+    implementation ("io.ktor:ktor-client-content-negotiation:2.1.3")
+    implementation ("io.ktor:ktor-serialization-kotlinx-json:2.1.3")
     implementation("com.airbnb.android:lottie-compose:4.0.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.7")
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
     implementation ("androidx.compose.animation:animation:1.7.7")
     implementation("androidx.navigation:navigation-compose:2.8.6")
-    implementation ("com.google.android.exoplayer:exoplayer:2.19.1")
-    implementation ("com.google.android.exoplayer:exoplayer-core:2.19.1")
-    implementation ("com.google.android.exoplayer:exoplayer-ui:2.19.1")
     implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation ("androidx.compose.runtime:runtime-livedata")

@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -35,6 +37,7 @@ import com.example.sangeetnow.Search
 import com.example.sangeetnow.TextCardSN
 import com.example.sangeetnow.TextFieldSN
 import com.example.sangeetnow.ViewModel.AuthViewModel
+import com.example.sangeetnow.ViewModel.DataViewModel
 import com.example.sangeetnow.ViewModel.UnAuthenticated
 import com.example.sangeetnow.ui.theme.LightModeColors
 
@@ -43,15 +46,18 @@ import com.example.sangeetnow.ui.theme.LightModeColors
 fun AccountPage(
     navController: NavHostController,
     sharedPreferences: SharedPreferences,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    dataViewModel: DataViewModel
 ) {
     val context= LocalContext.current
+    val verticalScroll= rememberScrollState()
     Column(
         modifier = Modifier
             .padding(5.dp)
             .fillMaxSize()
             .clip(RoundedCornerShape(20.dp))
             .background(LightModeColors.YellowD)
+            .verticalScroll(verticalScroll)
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -90,7 +96,7 @@ fun AccountPage(
         )
         Spacer(modifier = Modifier.height(60.dp))
         Button(onClick = {
-            authViewModel.logOut(context,sharedPreferences)
+            authViewModel.logOut(context,sharedPreferences,dataViewModel)
         }, colors = ButtonDefaults.buttonColors(containerColor = LightModeColors.Orange2, contentColor = Color.White)) {
             Text(text = "Log Out ", fontSize = 18.sp)
         }

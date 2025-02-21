@@ -1,5 +1,4 @@
 package com.example.sangeetnow.Pages
-
 import android.media.MediaPlayer
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -37,17 +36,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.example.sangeetnow.Build
 import com.example.sangeetnow.CurrentMusic
 import com.example.sangeetnow.Download.AndroidDownloader
 import com.example.sangeetnow.LoadingScreen
 import com.example.sangeetnow.MyPlayer
 import com.example.sangeetnow.TitlePlayer
+import com.example.sangeetnow.ViewModel.Build
 import com.example.sangeetnow.createToastMessage
 import com.example.sangeetnow.helperFunction
 import com.example.sangeetnow.ui.theme.LightModeColors
 import kotlinx.coroutines.delay
-
 @Composable
 fun Title(navController: NavHostController) {
     val mContext= LocalContext.current
@@ -150,9 +148,7 @@ fun Title(navController: NavHostController) {
             MyPlayer.first =true
         }
     }
-
-    }
-
+}
 @Composable
 fun MusicPlayerScreen(mediaPlayer: MediaPlayer, isPlaying: Boolean) {
     var songProgress by remember { mutableFloatStateOf(0f) }
@@ -166,7 +162,7 @@ fun MusicPlayerScreen(mediaPlayer: MediaPlayer, isPlaying: Boolean) {
     ) {
         Slider(
             valueRange = 0f..100f,
-            value = songProgress,  // Directly use songProgress
+            value = songProgress,
             onValueChange = { newValue ->
                 isSeeking = true
                 songProgress = newValue
@@ -181,8 +177,6 @@ fun MusicPlayerScreen(mediaPlayer: MediaPlayer, isPlaying: Boolean) {
         )
             Text(text = "${((songProgress / 100 * mediaPlayer.duration) / 1000).toLong()}s")
     }
-
-    // Launch effect to update song progress while playing
     LaunchedEffect(mediaPlayer.isPlaying) {
         while (mediaPlayer.isPlaying) {
             if (!isSeeking) {

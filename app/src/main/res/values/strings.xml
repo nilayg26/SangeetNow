@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">SangeetNow</string>
     <string name="web_client_id">499859529508-rtrlsh7im9tbfvhv0f5fcrajbolvmblc.apps.googleusercontent.com</string>
+    <string name="meditation">https://nilayg26.github.io/Animation/meditation.json</string>
+    <string name="speaker">https://nilayg26.github.io/Animation/speaker.json</string>
 </resources>

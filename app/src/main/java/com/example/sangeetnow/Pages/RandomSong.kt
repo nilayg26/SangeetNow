@@ -25,12 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.example.sangeetnow.Build
 import com.example.sangeetnow.BuildConfig
 import com.example.sangeetnow.CurrentMusic
 import com.example.sangeetnow.DataClasses.MainData
 import com.example.sangeetnow.LoadingScreen
 import com.example.sangeetnow.Title
+import com.example.sangeetnow.ViewModel.Build
 import com.example.sangeetnow.createToastMessage
 import com.google.ai.client.generativeai.GenerativeModel
 import retrofit2.Call

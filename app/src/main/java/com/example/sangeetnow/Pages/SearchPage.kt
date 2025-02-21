@@ -1,7 +1,6 @@
 package com.example.sangeetnow.Pages
 
 import android.content.SharedPreferences
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -20,11 +19,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,32 +35,36 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.sangeetnow.AccountPage
 import com.example.sangeetnow.AnimationLottie
 import com.example.sangeetnow.AppButton
-import com.example.sangeetnow.Build
-import com.example.sangeetnow.DataClasses.MainData
 import com.example.sangeetnow.DisplaySongs
 import com.example.sangeetnow.IconButtonSN
 import com.example.sangeetnow.R
+import com.example.sangeetnow.ViewModel.Build
+import com.example.sangeetnow.ViewModel.DataViewModel
 import com.example.sangeetnow.createToastMessage
 import com.example.sangeetnow.ui.theme.LightModeColors
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 @Composable
-fun SearchPage(navController: NavHostController, sharedPreferences: SharedPreferences) {
+fun SearchPage(
+    navController: NavHostController,
+    sharedPreferences: SharedPreferences,
+    dataViewModel: DataViewModel
+) {
+    val savedSearch=sharedPreferences.getString("search","") ?:""
     val context= LocalContext.current
     var isClicked by rememberSaveable() {
         mutableStateOf(false)
     }
+    LaunchedEffect(Unit) {
+        dataViewModel.getAnimation(context.getString(R.string.speaker),sharedPreferences,"speaker")
+    }
     val scrollState= rememberScrollState()
-        val mainData = remember { MutableLiveData(MainData(emptyList(), "", 0)) }
-        val dataChanged = mainData.observeAsState(initial = MainData(emptyList(), "", 0))
+        val dataChanged = dataViewModel.mainData.observeAsState()
         var search by rememberSaveable { mutableStateOf("") }
+
         Column(
             modifier = Modifier
                 .padding(5.dp)
@@ -110,33 +113,29 @@ fun SearchPage(navController: NavHostController, sharedPreferences: SharedPrefer
                         }
                     }
                     Spacer(modifier = Modifier.height(100.dp))
-                    AnimationLottie(R.raw.speaker, size = 250)
+                    AnimatedVisibility(dataViewModel.readyToDisplaySpeaker) {
+                        val jsonStr=sharedPreferences.getString("speaker","") ?: ""
+                        AnimationLottie(jsonStr = jsonStr)
+                    }
                     Text(text = "App By Nilay", fontStyle = FontStyle.Italic, fontSize = 12.sp, color = LightModeColors.Blue, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 7.dp))
                 }
             } else {
                 LaunchedEffect(search) {
-                    if(!Build.checkNetwork(context)){
-                        context.createToastMessage("Turn on Wifi or Mobile data")
+                    if (savedSearch != search) {
+                        dataViewModel.getSongList(context = context, search = search)
                     }
-                    val data = Build.search(search)
-                    data.enqueue(object : Callback<MainData?> {
-                        override fun onResponse(p0: Call<MainData?>, p1: Response<MainData?>) {
-                            mainData.value =
-                                p1.body()
-                        }
-                        override fun onFailure(p0: Call<MainData?>, p1: Throwable) {
-                            println("Error is $p1")
-                        }
-                    }
-                    )
                 }
-                if(dataChanged.value!=null) {
+                AnimatedVisibility(!dataViewModel.isLoading && dataChanged.value!=null) {
                     DisplaySongs(
                         mainData = dataChanged.value,
                         navController
                     )
                 }
-
+                DisposableEffect(Unit) {
+                    onDispose {
+                        sharedPreferences.edit().putString("search",search).apply()
+                    }
+                }
             }
         }
 

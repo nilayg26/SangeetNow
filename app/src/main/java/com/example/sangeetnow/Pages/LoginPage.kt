@@ -1,11 +1,8 @@
 package com.example.sangeetnow.Pages
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.InfiniteRepeatableSpec
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -31,23 +28,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.sangeetnow.AnimationLottie
 import com.example.sangeetnow.LoadingScreen
 import com.example.sangeetnow.LoginPage
@@ -56,28 +42,28 @@ import com.example.sangeetnow.Search
 import com.example.sangeetnow.TextCardSN
 import com.example.sangeetnow.ViewModel.AuthViewModel
 import com.example.sangeetnow.ViewModel.Authenticated
+import com.example.sangeetnow.ViewModel.DataViewModel
 import com.example.sangeetnow.ViewModel.Loading
 import com.example.sangeetnow.ui.theme.LightModeColors
 import kotlinx.coroutines.launch
 
+@SuppressLint("ResourceType")
 @Composable
 fun LogIn(
     navController: NavHostController,
     sharedPreferences: SharedPreferences,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    dataViewModel: DataViewModel
 ) {
-    val infiniteTransition= rememberInfiniteTransition("SangeetNow Text")
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.2f,
-        animationSpec = InfiniteRepeatableSpec(tween(1000),RepeatMode.Reverse),
-        label = "scale"
-    )
+    val verticalScroll= rememberScrollState()
         val context = LocalContext.current
         val coroutineScope = rememberCoroutineScope()
         val authState = authViewModel.authState.observeAsState()
         var isLoading by remember {
             mutableStateOf(false)
+        }
+        LaunchedEffect(Unit) {
+            dataViewModel.getAnimation(context.getString(R.string.meditation), sharedPreferences = sharedPreferences,name="meditation")
         }
         LaunchedEffect(authState.value) {
             when (authState.value) {
@@ -88,7 +74,6 @@ fun LogIn(
                         }
                     }
                 }
-
                 Loading -> {
                     isLoading = true
                 }
@@ -98,12 +83,10 @@ fun LogIn(
                 }
             }
         }
-    val verticalScroll= rememberScrollState()
         Column(
             modifier = Modifier
                 .padding(5.dp)
                 .fillMaxSize()
-                .clip(RoundedCornerShape(20.dp))
                 .background(LightModeColors.YellowD)
                 .verticalScroll(verticalScroll)
                 ,
@@ -113,12 +96,10 @@ fun LogIn(
             Spacer(modifier = Modifier.height(60.dp))
             TextCardSN("Lets Get you in!", color = LightModeColors.Orange2)
             Spacer(modifier = Modifier.height(80.dp))
-            AnimationLottie()
-//            Text(text = "Welcome to SangeetNow", fontStyle = FontStyle.Italic, fontWeight = FontWeight.Bold, color = LightModeColors.Blue, modifier = Modifier.graphicsLayer {
-//                scaleY=scale
-//                scaleX=scale
-//                transformOrigin= TransformOrigin.Center
-//            }, fontSize = 20.sp)
+            AnimatedVisibility(dataViewModel.readyToDisplayMeditation) {
+                val jsonStr= sharedPreferences.getString("meditation","") ?: ""
+                AnimationLottie(jsonStr =jsonStr)
+            }
             Spacer(modifier = Modifier.height(80.dp))
             Button(
                 modifier = Modifier.animateContentSize(),
@@ -132,7 +113,6 @@ fun LogIn(
                     contentColor = Color.White
                 )
             ) {
-
                     if (!isLoading) {
                         Text(text = "Continue with ", fontSize = 18.sp)
                         Image(
@@ -145,9 +125,7 @@ fun LogIn(
                     } else {
                         LoadingScreen()
                     }
-
             }
-
         }
 
 }

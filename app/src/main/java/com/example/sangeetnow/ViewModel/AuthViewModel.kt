@@ -72,8 +72,16 @@ class AuthViewModel:ViewModel() {
                 .build()
             return (GetCredentialRequest.Builder().addCredentialOption(googleIdOption).build())
         }
-        fun logOut(context: Context, sharedPreferences: SharedPreferences) {
-            sharedPreferences.edit().clear().apply()
+        fun logOut(
+            context: Context,
+            sharedPreferences: SharedPreferences,
+            dataViewModel: DataViewModel
+        ) {
+            dataViewModel.clearLogOut()
+            val jsonStr= sharedPreferences.getString("meditation","")?:""
+            sharedPreferences.edit().clear()
+                .putString("meditation",jsonStr)
+                .apply()
             auth.signOut()
             _authState.value = UnAuthenticated
         }

@@ -65,6 +65,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.example.sangeetnow.DataClasses.Data
 import com.example.sangeetnow.DataClasses.MainData
+import com.example.sangeetnow.ViewModel.Build
 import com.example.sangeetnow.ui.theme.LightModeColors
 @Composable
 fun AppButton(str: String,onClick:()->Unit){
@@ -203,7 +204,7 @@ fun Player(title: String="",url:String="",i: Int) {
     var isPlaying by remember{ mutableStateOf(false) }
     var click by remember{ mutableStateOf(false) }
     MyPlayer.addToMap(i){
-        isPlaying = false;
+        isPlaying = false
         click=false
     }
     Row {
@@ -257,7 +258,6 @@ fun Player(title: String="",url:String="",i: Int) {
         }
         }
     }
-
     DisposableEffect(Unit){
         onDispose {
                 MyPlayer.value.release()
@@ -325,13 +325,12 @@ fun LoadingScreen(size: Int=25) {
             color = LightModeColors.Blue
         )
     }
-
 }
 @Composable
-fun AnimationLottie(id:Int=R.raw.meditation,size:Int=200){
+fun AnimationLottie(size: Int = 200, jsonStr: String = ""){
     val preloaderLottieComposition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(
-            id
+        LottieCompositionSpec.JsonString(
+            jsonString = jsonStr
         )
     )
     val preloaderProgress by animateLottieCompositionAsState(
