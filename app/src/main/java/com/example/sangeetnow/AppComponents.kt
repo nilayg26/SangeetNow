@@ -76,8 +76,7 @@ fun AppButton(str: String,onClick:()->Unit){
             .clickable { onClick() },
         elevation = CardDefaults.elevatedCardElevation(15.dp),
         colors = CardDefaults.cardColors(containerColor = LightModeColors.Orange)
-    ) {
-        Row(
+    ) { Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
