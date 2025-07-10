@@ -18,9 +18,18 @@ SangeetNow is an AI-enabled Android app that lets you play and download 30-secon
 
 ## 📸 Some Screenshots
 
-| Login Page | Search Page | Search Results | AI Prompt | AI Results | Music Player Page | Profile Page |
-|------------|-------------|----------------|-----------|------------|--------------------|--------------|
-| <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.04jpeg.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.03.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.02.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.07.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.10.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.01.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.21.jpeg" width="200"/> |
+| Login Page | Search Page | Search Results |
+|------------|-------------|----------------|
+| <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.04jpeg.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.03.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.02.jpeg" width="200"/> |
+
+| AI Prompt | AI Results | Music Player Page |
+|-----------|------------|--------------------|
+| <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.07.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.10.jpeg" width="200"/> | <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.01.jpeg" width="200"/> |
+
+| Profile Page | 
+|--------------|
+| <img src="https://nilayg26.github.io/Animation/SangeetNowSamplePics.21.jpeg" width="200"/> |
+
 
 ## 📥 Download  
 [Click to Download the latest version of SangeetNow](https://github.com/nilayg26/SangeetNow/releases/download/v1.1.2/SangeetNow.apk)  
