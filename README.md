@@ -14,7 +14,8 @@ SangeetNow is an AI-enabled Android app that lets you play and download 30-secon
 - Used Android’s `MediaPlayer` class to handle audio playback, managing complex states and supporting URL-based audio streams.
 - Fetched song data from the `Deezer Music API` using `Retrofit`, then loaded and played audio through `MediaPlayer`.
 - Enabled AI-driven song selection by sending user mood prompts to `Gemini AI` via `Google’s AI Studio`, with selection logic coordinated through `ViewModels`.
-- Smooth, Stateful UI with Lottie Created a responsive, stateful & state-aware UI using Jetpack Compose. Integrated Lottie animations fetched from personally hosted GitHub Pages, then saved to device ROM using SharedPreferences to minimize mobile data usage.
+- Created a responsive, `stateful` & `state-aware UI` using `Jetpack Compose` integrated with sophisticated `ViewModels` to provide robust backend integration.
+  Integrated `Lottie animations` fetched from personally hosted `GitHub Pages`, then saved to device `ROM` using `SharedPreferences` to minimize mobile data usage.
 
 ## 🌟 Potential Impact
 
