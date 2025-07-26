@@ -11,11 +11,13 @@ SangeetNow is an AI-enabled Android app that lets you play and download 30-secon
 ## 🚀 How did I do it?
 
 - Integrated Google OAuth using `Firebase Authentication` to enable secure "Continue with Google" login.
-- Used Android’s `MediaPlayer` class to handle audio playback, managing complex states and supporting URL-based audio streams.
+- Managed seamless list/player playback using just two `MediaPlayer`, `BroadcastReceiver`, and `DownloadManager` classes with user download notifications.
 - Fetched song data from the `Deezer Music API` using `Retrofit`, then loaded and played audio through `MediaPlayer`.
 - Enabled AI-driven song selection by sending user mood prompts to `Gemini AI` via `Google’s AI Studio`, with selection logic coordinated through `ViewModels`.
 - Created a responsive, `stateful` & `state-aware UI` using `Jetpack Compose` integrated with sophisticated `ViewModels` to provide robust backend integration.
-  Integrated `Lottie animations` fetched from personally hosted `GitHub Pages`, then saved to device `ROM` using `SharedPreferences` to minimize mobile data usage.
+- Integrated `Lottie animations` fetched from personally hosted `GitHub Pages`, then saved to device `ROM` using `SharedPreferences` to minimize mobile data usage.
+## 🚀 What Major Technologies & Concepts I Used?  
+`Kotlin`, `Jetpack Compose`, `Retrofit`, `Deezer API`, `MVVM`, `Google's AI Studio`, `Media Player Class`, `Android SDK`
 
 ## 🌟 Potential Impact
 
