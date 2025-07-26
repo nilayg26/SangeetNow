@@ -17,7 +17,7 @@ SangeetNow is an AI-enabled Android app that lets you play and download 30-secon
 - Created a responsive, `stateful` & `state-aware UI` using `Jetpack Compose` integrated with sophisticated `ViewModels` to provide robust backend integration.
 - Integrated `Lottie animations` fetched from personally hosted `GitHub Pages`, then saved to device `ROM` using `SharedPreferences` to minimize mobile data usage.
 ## 🚀 What Major Technologies & Concepts I Used?  
-`Kotlin`, `Jetpack Compose`, `Retrofit`, `Deezer API`, `MVVM`, `Google's AI Studio`, `Media Player Class`, `DownloadManager Class`, `BroadcastReceiver Class`, `Android SDK`.
+`Kotlin`, `Jetpack Compose`, `Retrofit`, `Deezer API`, `MVVM`, `Google's AI Studio`, `Media Player Class`, `DownloadManager Class`, `BroadcastReceiver Class`, `Glide Image Library`, `Android SDK`
 ## 🌟 Potential Impact
 
 Assists millions of content creators and YouTubers with AI-driven song clips, making music discovery and ringtone updates effortless.
